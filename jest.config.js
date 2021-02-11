@@ -15,4 +15,5 @@ module.exports = {
     '@src/(.*)': '<rootDir>/src/$1',
     '@test/(.*)': '<rootDir>/test/$1',
   },
+  modulePathIgnorePatterns: ["node_modules", "dist"]
 };
