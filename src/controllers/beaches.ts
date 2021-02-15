@@ -10,7 +10,7 @@ export class BeachesController {
     try {
       const beach = new Beach(req.body);
       const result = await beach.save();
-      res.status(201).send({ ...req.body, id: 'fake-id' });
+      res.status(201).send(result);
     } catch (err) {
       if (err instanceof mongoose.Error.ValidationError) {
         res.status(422).send({ error: err.message });
