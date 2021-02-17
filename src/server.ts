@@ -7,7 +7,7 @@ import { BeachesController } from '@src/controllers/beaches';
 import { Application } from 'express';
 
 import * as database from '@src/database';
-import { UsersController } from './controllers/users';
+import { UsersController } from '@src/controllers/users';
 
 export class SetupServer extends Server {
   constructor(private port = 3000) {
