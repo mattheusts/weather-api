@@ -15,7 +15,7 @@ describe('users functional tests', () => {
 
       const response = await global.testRequest.post('/users').send(newUser);
       expect(response.status).toBe(201);
-      await expect(AuthService.comparePassword(newUser.password, response.body.password)).resolves.toBeTruthy();
+      await expect(AuthService.comparePasswords(newUser.password, response.body.password)).resolves.toBeTruthy();
       expect(response.body).toEqual(expect.objectContaining({ ...newUser, ...{ password: expect.any(String) }, }));
     });
 
