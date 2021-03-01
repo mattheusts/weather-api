@@ -3,7 +3,6 @@ import logger from '@src/logger';
 import { authMiddleware } from '@src/middlewares/auth';
 import { Beach } from '@src/model/beach';
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
 import { BaseController } from '.';
 
 @Controller('beaches')
@@ -17,11 +16,7 @@ export class BeachesController extends BaseController {
       res.status(201).send(result);
     } catch (error) {
       logger.error(error);
-      if (error instanceof mongoose.Error.ValidationError) {
-        res.status(422).send({ error: error.message });
-      } else {
-        res.status(500).send({ error: 'Internal Server Error' });
-      }
+      this.sendCreateUpdateErrorResponse(res, error);
     }
   }
 }
