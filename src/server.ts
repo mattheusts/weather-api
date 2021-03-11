@@ -4,6 +4,10 @@ import { Server } from '@overnightjs/core';
 import bodyParser from 'body-parser';
 import expressPino from 'express-pino-logger';
 import cors from 'cors';
+import apiSchema from '@src/api.schema.json';
+import swaggerUI from 'swagger-ui-express';
+import * as OpenApiValidator from 'express-openapi-validator';
+import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
 import { ForecastController } from '@src/controllers/forecast';
 import { BeachesController } from '@src/controllers/beaches';
 import { Application } from 'express';
@@ -19,6 +23,7 @@ export class SetupServer extends Server {
 
   public async init(): Promise<void> {
     this.setupExpress();
+    await this.docsSetup();
     this.setupControllers();
     await this.databaseSetup();
   }
@@ -34,6 +39,16 @@ export class SetupServer extends Server {
     const beachesController = new BeachesController();
     const usersController = new UsersController();
     this.addControllers([forecastController, beachesController, usersController]);
+  }
+
+  private async docsSetup(): Promise<void> {
+    this.app.use('/docs', swaggerUI.serve, swaggerUI.setup(apiSchema));
+    this.app.use(OpenApiValidator.middleware({
+      apiSpec: apiSchema as OpenAPIV3.Document,
+      validateRequests: true,
+      validateResponses: true,
+    }));
+
   }
 
   public getApp(): Application {
