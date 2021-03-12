@@ -15,6 +15,7 @@ import { Application } from 'express';
 import * as database from '@src/database';
 import { UsersController } from '@src/controllers/users';
 import logger from './logger';
+import { apiErrorValidator } from './middlewares/api-error-validator';
 
 export class SetupServer extends Server {
   constructor(private port = 3000) {
@@ -26,6 +27,7 @@ export class SetupServer extends Server {
     await this.docsSetup();
     this.setupControllers();
     await this.databaseSetup();
+    this.setupErrorHandlers();
   }
 
   private setupExpress(): void {
@@ -39,6 +41,10 @@ export class SetupServer extends Server {
     const beachesController = new BeachesController();
     const usersController = new UsersController();
     this.addControllers([forecastController, beachesController, usersController]);
+  }
+
+  private setupErrorHandlers(): void {
+    this.app.use(apiErrorValidator);
   }
 
   private async docsSetup(): Promise<void> {
