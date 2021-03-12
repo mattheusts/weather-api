@@ -61,6 +61,21 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "Invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "User validation failed: email: already exists in the database.",
+                  "code": "409",
+                  "error": "conflict"
+                }
+              }
+            }
           }
         }
       }
