@@ -29,7 +29,7 @@ process.on('uncaughtException', (error) => {
           logger.error(`App exited with error: ${error}`);
           process.exit(ExitStatus.Failure);
         }
-      })
+      });
     }
   } catch (error) {
     logger.error(`App exited with error: ${error}`);
