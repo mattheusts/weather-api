@@ -1,5 +1,5 @@
-import { Beach } from '@src/model/beach';
-import { User } from '@src/model/user';
+import {Beach} from '@src/model/beach';
+import {User} from '@src/model/user';
 import AuthService from '@src/services/auth';
 
 describe('Beaches functional test', () => {
@@ -27,7 +27,10 @@ describe('Beaches functional test', () => {
         position: 'E',
       };
 
-      const response = await global.testRequest.post('/beaches').set({ 'x-access-token': token }).send(newBeach);
+      const response = await global.testRequest
+        .post('/beaches')
+        .set({'x-access-token': token})
+        .send(newBeach);
       expect(response.status).toBe(201);
       expect(response.body).toEqual(expect.objectContaining(newBeach));
     });
@@ -39,19 +42,40 @@ describe('Beaches functional test', () => {
         name: 'Manly',
         position: 'E',
       };
-      const response = await global.testRequest.post('/beaches').set({ 'x-access-token': token }).send(newBeach);
+      const response = await global.testRequest
+        .post('/beaches')
+        .set({'x-access-token': token})
+        .send(newBeach);
 
       expect(response.status).toBe(400);
       expect(response.body).toEqual({
         code: 400,
         error: 'Bad Request',
-        message:
-          'request.body.lat should be number',
+        message: 'request.body.lat should be number',
       });
     });
 
-    it.skip('should return 500 when there is any error other than validation error', async () => {
-      //TODO think in a way to throw a 500
+    it('should return 500 when there is any error other than validation error', async () => {
+      jest
+        .spyOn(Beach.prototype, 'save')
+        .mockImplementationOnce(() => Promise.reject('fail to create beach'));
+      const newBeach = {
+        lat: -33.792726,
+        lng: 46.43243,
+        name: 'Manly',
+        position: 'E',
+      };
+
+      const response = await global.testRequest
+        .post('/beaches')
+        .send(newBeach)
+        .set({'x-access-token': token});
+      expect(response.status).toBe(500);
+      expect(response.body).toEqual({
+        code: 500,
+        error: 'Internal Server Error',
+        message: 'Something wen wrong!',
+      });
     });
   });
 });
